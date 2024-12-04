@@ -27,13 +27,14 @@ final class Day04: AOCDay {
             .map {
                 findXMAS(at: $0)
             }
-            .reduce(0, +) / 2
+            .reduce(0, +)
     }
 
     private func findXMAS(at p: Point) -> Int {
         guard ["X", "S"].contains(grid[p]) else { return 0 }
 
-        let sets = Direction.allCases.map { dir in
+        let directions: [Direction] = [.w, .sw, .s, .se]
+        let sets = directions.map { dir in
             (0...3).map { steps in
                 p.moved(to: dir, steps: steps)
             }
@@ -62,7 +63,7 @@ final class Day04: AOCDay {
 
     private func findX_MAS(at p: Point) -> Bool {
         guard grid[p] == "A" else { return false }
-        
+
         let sets = [
             [p.moved(to: .nw), p, p.moved(to: .se)],
             [p.moved(to: .sw), p, p.moved(to: .ne)]
