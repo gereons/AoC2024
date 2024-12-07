@@ -16,22 +16,26 @@ final class Day07: AOCDay {
 
     func part1() -> Int {
         equations
-            .map { solve($0, ops: [add, mul]) }
+            .compactMap { solve($0, ops: [add, mul]) }
             .reduce(0, +)
     }
 
     func part2() -> Int {
         equations
-            .map { solve($0, ops: [add, mul, cat]) }
+            .compactMap { solve($0, ops: [add, mul, cat]) }
             .reduce(0, +)
     }
 
-    private func solve(_ equation: [Int], ops: [Op]) -> Int {
-        let expected = equation[0]
-        let equation = Array(equation.dropFirst())
+    typealias Op = (Int, Int) -> Int
 
-        let f = findFormula(equation, expected: expected, index: 1, partialResult: equation[0], ops: ops)
-        return f ?? 0
+    private func solve(_ equation: [Int], ops: [Op]) -> Int? {
+        findFormula(
+            equation,
+            expected: equation[0],
+            index: 2,
+            partialResult: equation[1],
+            ops: ops
+        )
     }
 
     private func findFormula(_ equation: [Int], expected: Int, index: Int, partialResult: Int, ops: [Op]) -> Int? {
@@ -44,15 +48,14 @@ final class Day07: AOCDay {
 
         for op in ops {
             let nextPartial = op(partialResult, equation[index])
-            if let f = findFormula(equation, expected: expected, index: index + 1, partialResult: nextPartial, ops: ops) {
-                return f
+            if let result = findFormula(equation, expected: expected, index: index + 1, partialResult: nextPartial, ops: ops) {
+                return result
             }
         }
         return nil
     }
 
-    typealias Op = (Int, Int) -> Int
-    private func add(_ a: Int, b: Int) -> Int { a + b }
-    private func mul(_ a: Int, b: Int) -> Int { a * b }
-    private func cat(_ a: Int, b: Int) -> Int { Int("\(a)\(b)")! }
+    private func add(_ a: Int, _ b: Int) -> Int { a + b }
+    private func mul(_ a: Int, _ b: Int) -> Int { a * b }
+    private func cat(_ a: Int, _ b: Int) -> Int { Int("\(a)\(b)")! }
 }
