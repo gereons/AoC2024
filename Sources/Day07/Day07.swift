@@ -5,6 +5,7 @@
 //
 
 import AoCTools
+import Foundation
 
 final class Day07: AOCDay {
     let title = "Bridge Repair"
@@ -16,46 +17,51 @@ final class Day07: AOCDay {
 
     func part1() -> Int {
         equations
-            .compactMap { solve($0, ops: [add, mul]) }
+            .compactMap { solve($0) }
             .reduce(0, +)
     }
 
     func part2() -> Int {
         equations
-            .compactMap { solve($0, ops: [add, mul, cat]) }
+            .compactMap { solve($0, part2: true) }
             .reduce(0, +)
     }
 
-    typealias Op = (Int, Int) -> Int
-
-    private func solve(_ equation: [Int], ops: [Op]) -> Int? {
-        findFormula(
+    private func solve(_ equation: [Int], part2: Bool = false) -> Int? {
+        solve(
             equation,
             expected: equation[0],
             index: 2,
-            partialResult: equation[1],
-            ops: ops
+            partial: equation[1],
+            part2: part2
         )
     }
 
-    private func findFormula(_ equation: [Int], expected: Int, index: Int, partialResult: Int, ops: [Op]) -> Int? {
-        if partialResult > expected {
+    private func solve(_ equation: [Int], expected: Int, index: Int, partial: Int, part2: Bool) -> Int? {
+        if partial > expected {
             return nil
         }
         if index == equation.count {
-            return expected == partialResult ? partialResult : nil
+            return expected == partial ? partial : nil
         }
 
-        for op in ops {
-            let nextPartial = op(partialResult, equation[index])
-            if let result = findFormula(equation, expected: expected, index: index + 1, partialResult: nextPartial, ops: ops) {
-                return result
-            }
+        if part2, let result = solve(equation, expected: expected, index: index + 1, partial: cat(partial, equation[index]), part2: part2) {
+            return result
         }
-        return nil
+        if let result = solve(equation, expected: expected, index: index + 1, partial: partial + equation[index], part2: part2) {
+            return result
+        }
+        return solve(equation, expected: expected, index: index + 1, partial: partial * equation[index], part2: part2)
     }
 
-    private func add(_ a: Int, _ b: Int) -> Int { a + b }
-    private func mul(_ a: Int, _ b: Int) -> Int { a * b }
-    private func cat(_ a: Int, _ b: Int) -> Int { Int("\(a)\(b)")! }
+    private func cat(_ a: Int, _ b: Int) -> Int {
+        var a = a
+        var tmp = b
+        while tmp > 0 {
+            a *= 10
+            tmp /= 10
+        }
+        return a + b
+    }
+
 }
