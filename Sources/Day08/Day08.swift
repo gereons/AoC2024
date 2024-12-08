@@ -77,13 +77,3 @@ final class Day08: AOCDay {
         return antinodes.count
     }
 }
-
-extension Point {
-    static func += (lhs: inout Point, rhs: Point) {
-        lhs = lhs + rhs
-    }
-
-    static func -= (lhs: inout Point, rhs: Point) {
-        lhs = lhs - rhs
-    }
-}

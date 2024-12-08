@@ -10,7 +10,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-parsing", from: "0.13.0"),
-        .package(url: "https://github.com/gereons/AoCTools", from: "0.1.1")
+        .package(url: "https://github.com/gereons/AoCTools", from: "0.1.3")
 //        .package(path: "../AoCTools")
     ],
     targets: [
