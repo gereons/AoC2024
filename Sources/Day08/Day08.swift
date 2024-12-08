@@ -10,8 +10,6 @@ final class Day08: AOCDay {
     let title = "Resonant Collinearity"
 
     let grid: [Point: Character]
-    let maxX: Int
-    let maxY: Int
 
     init(input: String) {
         let lines = input.lines
@@ -23,8 +21,6 @@ final class Day08: AOCDay {
                 }
             }
         grid = Dictionary(points, uniquingKeysWith: { _, new in new } )
-        maxY = lines.count
-        maxX = lines[0].count
     }
 
     func part1() -> Int {
@@ -32,8 +28,8 @@ final class Day08: AOCDay {
         let frequencies = Set(antennas.map { $0.value })
 
         var antinodes = Set<Point>()
-        for freq in frequencies {
-            let check = antennas.filter { $0.value == freq }
+        for frequency in frequencies {
+            let check = antennas.filter { $0.value == frequency }
             for pair in check.combinations(ofCount: 2) {
                 let antenna1 = pair[0].key
                 let antenna2 = pair[1].key
@@ -53,6 +49,41 @@ final class Day08: AOCDay {
     }
 
     func part2() -> Int {
-        0
+        let antennas = grid.filter { $0.value != "." }
+        let frequencies = Set(antennas.map { $0.value })
+
+        var antinodes = Set<Point>()
+        for frequency in frequencies {
+            let check = antennas.filter { $0.value == frequency }
+            for pair in check.combinations(ofCount: 2) {
+                let antenna1 = pair[0].key
+                let antenna2 = pair[1].key
+                let vector = antenna1 - antenna2
+
+                var p = antenna1
+                while grid[p] != nil {
+                    antinodes.insert(p)
+                    p += vector
+                }
+
+                p = antenna2
+                while grid[p] != nil {
+                    antinodes.insert(p)
+                    p -= vector
+                }
+            }
+        }
+
+        return antinodes.count
+    }
+}
+
+extension Point {
+    static func += (lhs: inout Point, rhs: Point) {
+        lhs = lhs + rhs
+    }
+
+    static func -= (lhs: inout Point, rhs: Point) {
+        lhs = lhs - rhs
     }
 }

@@ -37,12 +37,12 @@ struct Day08Tests {
     @MainActor @Test("Day 8 Part 2")
     func testDay08_part2() {
         let day = Day08(input: testInput)
-        #expect(day.part2() == 0)
+        #expect(day.part2() == 34)
     }
 
     @MainActor @Test("Day 8 Part 2 Solution")
     func testDay08_part2_solution() {
         let day = Day08(input: Day08.input)
-        #expect(day.part2() == 0)
+        #expect(day.part2() == 1352)
     }
 }
