@@ -7,6 +7,7 @@
 import AoCTools
 
 final class Day14: AOCDay {
+    let title = ""
     
     init(input: String) {
     }

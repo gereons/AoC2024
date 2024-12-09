@@ -7,6 +7,8 @@
 import AoCTools
 
 final class Day09: AOCDay {
+    let title = "Disk Fragmenter"
+    
     let map: [Int]
     init(input: String) {
         map = input.map { Int(String($0))! }
@@ -47,13 +49,6 @@ final class Day09: AOCDay {
     enum Block {
         case file(id: Int, size: Int)
         case free(size: Int)
-
-        var isFree: Bool {
-            switch self {
-            case .file: false
-            case .free: true
-            }
-        }
 
         func isFree(minSize: Int) -> Bool {
             switch self {
