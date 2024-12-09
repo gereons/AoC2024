@@ -24,15 +24,17 @@ final class Day08: AOCDay {
     }
 
     func part1() -> Int {
-        let antennas = grid.filter { $0.value != "." }
-        let frequencies = Set(antennas.map { $0.value })
+        var antennas = [Character: [Point]]()
+        for (point, ch) in grid {
+            if ch == "." { continue }
+            antennas[ch, default: []].append(point)
+        }
 
         var antinodes = Set<Point>()
-        for frequency in frequencies {
-            let check = antennas.filter { $0.value == frequency }
+        for check in antennas.values {
             for pair in check.combinations(ofCount: 2) {
-                let antenna1 = pair[0].key
-                let antenna2 = pair[1].key
+                let antenna1 = pair[0]
+                let antenna2 = pair[1]
                 let vector = antenna1 - antenna2
 
                 if grid[antenna1 + vector] != nil {
@@ -49,15 +51,17 @@ final class Day08: AOCDay {
     }
 
     func part2() -> Int {
-        let antennas = grid.filter { $0.value != "." }
-        let frequencies = Set(antennas.map { $0.value })
+        var antennas = [Character: [Point]]()
+        for (point, ch) in grid {
+            if ch == "." { continue }
+            antennas[ch, default: []].append(point)
+        }
 
         var antinodes = Set<Point>()
-        for frequency in frequencies {
-            let check = antennas.filter { $0.value == frequency }
+        for check in antennas.values {
             for pair in check.combinations(ofCount: 2) {
-                let antenna1 = pair[0].key
-                let antenna2 = pair[1].key
+                let antenna1 = pair[0]
+                let antenna2 = pair[1]
                 let vector = antenna1 - antenna2
 
                 var p = antenna1
