@@ -5,6 +5,7 @@
 //
 
 import AoCTools
+import Collections
 
 final class Day10: AOCDay {
     let title = "Hoof It"
@@ -27,11 +28,11 @@ final class Day10: AOCDay {
         let starts = grid.filter { $0.value == 0 }.map { $0.key }
         let ends = grid.filter { $0.value == 9 }.map { $0.key }
 
-        let pathfinder = AStarPathfinder(map: Trail(grid: grid))
+        let trail = Trail(grid: grid)
 
         return starts.flatMap { start in
             ends.map { end in
-                pathfinder.shortestPath(from: start, to: end) != [] ? 1 : 0
+                trail.findPath(from: start, to: end) ? 1 : 0
             }
         }.reduce(0, +)
     }
@@ -41,17 +42,34 @@ final class Day10: AOCDay {
         let trail = Trail(grid: grid)
 
         return starts
-            .reduce(0) { $0 + trail.findRatings(from: $1) }
+            .map { trail.findRatings(from: $0) }
+            .reduce(0, +)
     }
 
-    struct Trail: Pathfinding {
+    // for some weird reason, wrapping these methods into their own struct
+    // generates code that runs nearly twice as fast compared to when
+    // the methods are hoisted up to be in `class Day10` directly
+    // ¯\_(ツ)_/¯
+    struct Trail {
         let grid: [Point: Int]
 
-        func neighbors(for point: Point) -> [Point] {
-            let height = grid[point]!
+        private func neighbors(for point: Point) -> [Point] {
+            let height = grid[point]! + 1
             return point
                 .neighbors()
-                .filter { grid[$0] == height + 1 }
+                .filter { grid[$0] == height }
+        }
+
+        func findPath(from start: Point, to end: Point) -> Bool {
+            var queue = Deque<Point>([start])
+
+            while let point = queue.popFirst() {
+                if point == end {
+                    return true
+                }
+                queue.append(contentsOf: neighbors(for: point))
+            }
+            return false
         }
 
         func findRatings(from start: Point, rating: Int = 0) -> Int {
