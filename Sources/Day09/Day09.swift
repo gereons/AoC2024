@@ -93,17 +93,15 @@ final class Day09: AOCDay {
             let fileSize = fileSizes[moveId]!
             let fileIndex = newBlocks.firstIndex(where: { $0.isFile(id: moveId) })!
 
-            guard let freeIndex = firstFreeIndex(before: fileIndex, minSize: fileSize, in: newBlocks) else { continue }
+            guard let freeIndex = firstFreeIndex(before: fileIndex, minSize: fileSize, in: newBlocks) else {
+                continue
+            }
 
-            let freeBlock = newBlocks[freeIndex]
-            let freeSize = freeBlock.size
+            let freeSize = newBlocks[freeIndex].size
             newBlocks[fileIndex] = .free(size: fileSize)
             newBlocks[freeIndex] = .file(id: moveId, size: fileSize)
-            if fileSize == freeSize {
-                mergeFree(&newBlocks, at: fileIndex)
-            } else {
+            if fileSize != freeSize {
                 newBlocks.insert(.free(size: freeSize - fileSize), at: freeIndex + 1)
-                mergeFree(&newBlocks, at: fileIndex + 1)
             }
         }
 
@@ -116,7 +114,7 @@ final class Day09: AOCDay {
         return checksum
     }
 
-    func expandBlocks(_ blocks: [Block]) -> [Int] {
+    private func expandBlocks(_ blocks: [Block]) -> [Int] {
         var result = [Int]()
         for b in blocks {
             switch b {
@@ -148,26 +146,5 @@ final class Day09: AOCDay {
             }
         }
         return nil
-    }
-
-    private func mergeFree(_ blocks: inout [Block], at index: Int) {
-        let b1 = blocks[safe: index - 1]
-        let b2 = blocks[index]
-        let b3 = blocks[safe: index + 1]
-
-        switch (b1, b2, b3) {
-        case (.free(let s1), .free(let s2), .free(let s3)):
-            blocks[index - 1] = .free(size: s1 + s2 + s3)
-            blocks.remove(at: index + 1)
-            blocks.remove(at: index)
-        case (.free(let s1), .free(let s2), _):
-            blocks[index - 1] = .free(size: s1 + s2)
-            blocks.remove(at: index)
-        case (_, .free(let s1), .free(let s2)):
-            blocks[index] = .free(size: s1 + s2)
-            blocks.remove(at: index + 1)
-        default:
-            break
-        }
     }
 }
