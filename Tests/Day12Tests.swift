@@ -72,22 +72,25 @@ struct Day12Tests {
 
     @MainActor @Test("Day 12 Part 2")
     func testDay12_part2() {
-//        var day = Day12(input: testInput)
-//        #expect(day.part1() == 80)
-//
-//        day = Day12(input: testInput2)
-//        #expect(day.part1() == 436)
-//
-//        day = Day12(input: testInput4)
-//        #expect(day.part1() == 236)
-//
-//        day = Day12(input: testInput5)
-//        #expect(day.part1() == 368)
+        var day = Day12(input: testInput)
+        #expect(day.part2() == 80)
+
+        day = Day12(input: testInput2)
+        #expect(day.part2() == 436)
+
+        day = Day12(input: testInput3)
+        #expect(day.part2() == 1206)
+
+        day = Day12(input: testInput4)
+        #expect(day.part2() == 236)
+
+        day = Day12(input: testInput5)
+        #expect(day.part2() == 368)
     }
 
     @MainActor @Test("Day 12 Part 2 Solution")
     func testDay12_part2_solution() {
         let day = Day12(input: Day12.input)
-        #expect(day.part2() == 0)
+        #expect(day.part2() == 830566)
     }
 }
