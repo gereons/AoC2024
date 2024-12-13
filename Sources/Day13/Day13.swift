@@ -46,13 +46,11 @@ final class Day13: AOCDay {
 
     private func pushButtons(_ m: Machine, offset: Int = 0) -> (Int, Int)? {
         let prize = m.prize + Point(offset, offset)
-        let a =
-            (m.buttonB.x * -prize.y + m.buttonB.y * prize.x) /
-            (m.buttonB.y * m.buttonA.x - m.buttonB.x * m.buttonA.y)
 
         let b =
-            -(m.buttonA.x * prize.y - m.buttonA.y * prize.x) /
-            (m.buttonB.x * m.buttonA.y - m.buttonB.y * m.buttonA.x)
+            (m.buttonA.y * prize.x - m.buttonA.x * prize.y) /
+            (m.buttonA.y * m.buttonB.x - m.buttonA.x * m.buttonB.y)
+        let a = (prize.x - m.buttonB.x * b) / m.buttonA.x
 
         let x = m.buttonA.x * a + m.buttonB.x * b
         let y = m.buttonA.y * a + m.buttonB.y * b
