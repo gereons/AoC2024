@@ -6,19 +6,13 @@
 
 import AoCTools
 
-private class Robot {
-    var position: Point
-    let start: Point
+private struct Robot {
+    let position: Point
     let velocity: Point
 
     init(position: Point, velocity: Point) {
-        self.start = position
         self.position = position
         self.velocity = velocity
-    }
-
-    func reset() {
-        position = start
     }
 }
 
@@ -42,54 +36,70 @@ final class Day14: AOCDay {
     }
 
     func part1() -> Int {
-        robots.forEach { $0.reset() }
-        for _ in 0..<100 {
-            for var robot in robots {
-                move(&robot)
-            }
-        }
+        let positions = robots
+            .map { move($0, seconds: 100) }
+            .map { $0.position }
 
-        let q1 = robots.filter { $0.position.x < width / 2 && $0.position.y < height / 2 }.count
-        let q2 = robots.filter { $0.position.x > width / 2 && $0.position.y < height / 2 }.count
-        let q3 = robots.filter { $0.position.x < width / 2 && $0.position.y > height / 2 }.count
-        let q4 = robots.filter { $0.position.x > width / 2 && $0.position.y > height / 2 }.count
+        let q1 = positions.filter { $0.x < width / 2 && $0.y < height / 2 }.count
+        let q2 = positions.filter { $0.x > width / 2 && $0.y < height / 2 }.count
+        let q3 = positions.filter { $0.x < width / 2 && $0.y > height / 2 }.count
+        let q4 = positions.filter { $0.x > width / 2 && $0.y > height / 2 }.count
 
         return q1 * q2 * q3 * q4
     }
 
-    private func move(_ robot: inout Robot) {
-        let newPosition = robot.position + robot.velocity
-        var newX = newPosition.x
-        var newY = newPosition.y
-        if newX < 0 {
-            newX = width + newX
-        } else if newX >= width {
-            newX -= width
+    private func move(_ robot: Robot, seconds: Int) -> Robot {
+        let newX = robot.position.x + seconds * robot.velocity.x
+        let newY = robot.position.y + seconds * robot.velocity.y
+
+        return Robot(
+            position: Point(
+                clamp(newX, max: width),
+                clamp(newY, max: height)
+            ),
+            velocity: robot.velocity
+        )
+    }
+
+    private func clamp(_ value: Int, max: Int) -> Int {
+        if value > 0 {
+            return value % max
+        } else {
+            let mod = (-value % max)
+            return mod == 0 ? 0 : max - mod
         }
-        if newY < 0 {
-            newY = height + newY
-        } else if newY >= height {
-            newY -= height
-        }
-        robot.position = Point(newX, newY)
     }
 
     func part2() -> Int {
-        // solved visually by looking at the output of
-        /*
-        robots.forEach { $0.reset() }
-
-        for i in 1 ... width * height {
-            for var robot in robots {
-                move(&robot)
+        // find the second where the total distance of all robots to the grid's center
+        // is the lowest
+        let mid = Point(width / 2, height / 2)
+        var minDistance = Int.max
+        var minSec = 0
+        for sec in 1 ... (width * height) {
+            let robots = robots.map { move($0, seconds: sec) }
+            let distance = robots.map { $0.position.distance(to: mid) }.reduce(0, +)
+            if distance < minDistance {
+                minDistance = distance
+                minSec = sec
             }
-
-            print(i)
-            let map = Dictionary(robots.map { ($0.position, true) }, uniquingKeysWith: { _, new in new })
-            let grid = Grid(points: map)
-            grid.draw()
         }
-        */
-        return 7492
+
+        return minSec
+
+        // initially solved visually by looking at the output of
+        //
+        // robots.forEach { $0.reset() }
+        //
+        // for i in 1 ... width * height {
+        //     for var robot in robots {
+        //         move(&robot)
+        //     }
+        //
+        //     print(i)
+        //     let map = Dictionary(robots.map { ($0.position, true) }, uniquingKeysWith: { _, new in new })
+        //     let grid = Grid(points: map)
+        //     grid.draw()
+        // }
     }
 }
