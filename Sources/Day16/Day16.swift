@@ -18,7 +18,7 @@ final class Day16: AOCDay {
                     return (p, ch)
                 }
             }
-        grid = Dictionary(points, uniquingKeysWith: { _, new in new } )
+        grid = Dictionary(points, uniquingKeysWith: { _, new in new })
     }
 
     func part1() -> Int {

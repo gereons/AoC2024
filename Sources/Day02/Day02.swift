@@ -27,11 +27,9 @@ private struct Report {
         }
 
         let firstNonInc = pairs
-            .enumerated()
-            .first { index, element in !diffOk(element.0, element.1, 1) }
+            .first { element in !diffOk(element.0, element.1, 1) }
         let firstNonDec = pairs
-            .enumerated()
-            .first { index, element in !diffOk(element.0, element.1, -1) }
+            .first { element in !diffOk(element.0, element.1, -1) }
 
         for check in [firstNonInc!, firstNonDec!] {
             for index in [check.0, check.0 + 1] {

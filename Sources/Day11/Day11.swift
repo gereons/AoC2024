@@ -59,7 +59,7 @@ final class Day11: AOCDay {
         } else {
             result = expandStone(2024 * stone, blinks - 1)
         }
-        
+
         cache[key] = result
         return result
     }

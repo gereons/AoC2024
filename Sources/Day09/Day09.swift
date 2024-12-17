@@ -8,7 +8,7 @@ import AoCTools
 
 final class Day09: AOCDay {
     let title = "Disk Fragmenter"
-    
+
     let map: [Int]
     init(input: String) {
         map = input.map { Int(String($0))! }

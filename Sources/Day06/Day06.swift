@@ -22,7 +22,7 @@ final class Day06: AOCDay {
                     return (p, ch)
                 }
             }
-        grid = Dictionary(points, uniquingKeysWith: { _, new in new } )
+        grid = Dictionary(points, uniquingKeysWith: { _, new in new })
         start = grid.first { $0.value == "^" }!.key
         area = grid.count { $0.value == "." } + 1
     }

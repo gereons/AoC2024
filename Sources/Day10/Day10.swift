@@ -21,7 +21,7 @@ final class Day10: AOCDay {
                     return (p, Int(String(ch)) ?? -1)
                 }
             }
-        grid = Dictionary(points, uniquingKeysWith: { _, new in new } )
+        grid = Dictionary(points, uniquingKeysWith: { _, new in new })
     }
 
     func part1() -> Int {
@@ -30,11 +30,13 @@ final class Day10: AOCDay {
 
         let trail = Trail(grid: grid)
 
-        return starts.flatMap { start in
-            ends.map { end in
-                trail.findPath(from: start, to: end) ? 1 : 0
+        return starts
+            .flatMap { start in
+                ends.map { end in
+                    trail.findPath(from: start, to: end) ? 1 : 0
+                }
             }
-        }.reduce(0, +)
+            .reduce(0, +)
     }
 
     func part2() -> Int {

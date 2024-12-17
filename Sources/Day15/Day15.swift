@@ -23,7 +23,7 @@ final class Day15: AOCDay {
                     return (p, ch)
                 }
             }
-        grid = Dictionary(points, uniquingKeysWith: { _, new in new } )
+        grid = Dictionary(points, uniquingKeysWith: { _, new in new })
         directions = groups[1].joined().map {
             switch $0 {
             case "^": .up
@@ -48,7 +48,7 @@ final class Day15: AOCDay {
                     return (p, ch)
                 }
             }
-        grid2 = Dictionary(points2, uniquingKeysWith: { _, new in new } )
+        grid2 = Dictionary(points2, uniquingKeysWith: { _, new in new })
     }
 
     func part1() -> Int {

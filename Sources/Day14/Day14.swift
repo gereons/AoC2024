@@ -9,11 +9,6 @@ import AoCTools
 private struct Robot {
     let position: Point
     let velocity: Point
-
-    init(position: Point, velocity: Point) {
-        self.position = position
-        self.velocity = velocity
-    }
 }
 
 final class Day14: AOCDay {

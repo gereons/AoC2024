@@ -63,7 +63,6 @@ private final class ChronospatialComputer {
         return output
     }
 
-
     private func pow(_ x: Int, _ y: Int) -> Int {
         Int(Foundation.pow(Double(x), Double(y)))
     }
