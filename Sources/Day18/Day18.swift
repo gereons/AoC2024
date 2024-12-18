@@ -22,7 +22,8 @@ final class Day18: AOCDay {
 
     func part1(fallen: Int, gridSize: Int) -> Int {
         let ram = emptyRAM(size: gridSize)
-        return findPath(through: ram, fallenBytes: bytes.prefix(fallen), gridSize: gridSize)
+        let path = findPath(through: ram, fallenBytes: bytes.prefix(fallen), gridSize: gridSize)
+        return path.count
     }
 
     func part2() -> String {
@@ -31,23 +32,30 @@ final class Day18: AOCDay {
 
     func part2(fallen: Int, gridSize: Int) -> String {
         let ram = emptyRAM(size: gridSize)
+        var lastValidPath = findPath(through: ram, fallenBytes: bytes.prefix(fallen), gridSize: gridSize)
+
         for prefix in fallen + 1 ..< bytes.count {
             let bytes = bytes.prefix(prefix)
-            if findPath(through: ram, fallenBytes: bytes, gridSize: gridSize) == 0 {
-                return bytes.last!.description
+            let lastByte = bytes.last!
+            if lastValidPath.contains(lastByte) {
+                let path = findPath(through: ram, fallenBytes: bytes, gridSize: gridSize)
+                if path.isEmpty {
+                    return lastByte.description
+                }
+                lastValidPath = path
             }
         }
         return ""
     }
 
-    private func findPath(through ram: [Point: Character], fallenBytes: any Sequence<Point>, gridSize: Int) -> Int {
+    private func findPath(through ram: [Point: Character], fallenBytes: any Sequence<Point>, gridSize: Int) -> [Point] {
         var ram = ram
         fallenBytes.forEach { ram[$0] = "#" }
 
         let ramNavigator = RAMNavigator(ram: ram)
         let pathfinder = AStarPathfinder(map: ramNavigator)
         let path = pathfinder.shortestPath(from: .zero, to: Point(gridSize, gridSize))
-        return path.count
+        return path
     }
 
     private func emptyRAM(size: Int) -> [Point: Character] {
