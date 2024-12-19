@@ -36,12 +36,12 @@ final class Day19: AOCDay {
             return 1
         }
 
+        if let ways = cache[towel] {
+            return ways
+        }
+
         var ways = 0
         for color in colors {
-            if let seen = cache[towel] {
-                return seen
-            }
-
             if towel.hasPrefix(color) {
                 ways += waysToMake(towel: String(towel.dropFirst(color.count)))
             }
