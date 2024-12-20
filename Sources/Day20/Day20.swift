@@ -10,34 +10,17 @@ import Collections
 final class Day20: AOCDay {
     let title = "Race Condition"
 
-    let grid: [[Character]]
-    let walls: Set<Point>
-    let start: Point
-    let end: Point
+    let grid: [Point: Character]
 
     init(input: String) {
-        var points = input.lines.map { Array($0) }
-        var walls = Set<Point>()
-        var start: Point?
-        var end: Point?
-        for y in 0..<points.count {
-            for x in 0..<points[y].count {
-                let p = Point(x, y)
-                if points[p] == "S" {
-                    start = p
-                } else if points[p] == "E" {
-                    end = p
-                } else if points[p] == "#" {
-                    walls.insert(p)
+        let points = input.lines
+            .enumerated().flatMap { y, line in
+                line.enumerated().map { x, ch in
+                    let p = Point(x, y)
+                    return (p, ch)
                 }
             }
-        }
-        points[start!] = "."
-        points[end!] = "."
-        self.grid = points
-        self.walls = walls
-        self.start = start!
-        self.end = end!
+        grid = Dictionary(points, uniquingKeysWith: { _, new in new })
     }
 
     func part1() -> Int {
@@ -45,28 +28,26 @@ final class Day20: AOCDay {
     }
 
     func part1(minTimeSaved: Int) -> Int {
-        let raceTrack = RaceTrack(grid: grid)
-        let regularTime = raceTrack.shortestTime(from: start, to: end)
+        let start = grid.first { $0.value == "S" }!.key
+        let end = grid.first { $0.value == "E" }!.key
+        var grid = grid
+        grid[start] = "."
+        grid[end] = "."
 
-        var cheatCandidates = [Point]()
-        for wall in walls {
-            if grid[safe: wall + .left] == "." && grid[safe: wall + .right] == "." {
-                cheatCandidates.append(wall)
-            }
-            if grid[safe: wall + .up] == "." && grid[safe: wall + .down] == "." {
-                cheatCandidates.append(wall)
-            }
-        }
+        let raceTrack = RaceTrack(grid: grid)
+        let regularPath = raceTrack.shortestPath(from: start, to: end)
+        let fullPath = [start] + regularPath
+        let distances = Dictionary(uniqueKeysWithValues: fullPath.enumerated().map { ($0.element, $0.offset) })
 
         var timesSaved = [Int: Int]()
-        for cheat in cheatCandidates {
-            var grid = grid
-            grid[cheat] = "."
-            let cheatTrack = RaceTrack(grid: grid)
-            let cheatTime = cheatTrack.shortestTime(from: start, to: end)
-            timesSaved[regularTime - cheatTime, default: 0] += 1
+        for (point, distance) in distances {
+            for candidate in point.points(within: 2) {
+                guard let onPath = distances[candidate] else { continue }
+                if onPath > distance + 2 {
+                    timesSaved[onPath - distance - 2, default: 0] += 1
+                }
+            }
         }
-
         return timesSaved.filter { $0.key >= minTimeSaved }.reduce(0) { $0 + $1.value }
     }
 
@@ -75,33 +56,30 @@ final class Day20: AOCDay {
     }
 }
 
-struct RaceTrack {
-    let grid: [[Character]]
-
-    func shortestTime(from start: Point, to end: Point) -> Int {
-        var queue = Deque([(start, 0)])
-        var visited = Set([start])
-
-        while let (next, len) = queue.popFirst() {
-            if next == end {
-                return len
-            }
-            visited.insert(next)
-            for n in neighbors(of: next) {
-                if !visited.contains(n) {
-                    queue.append((n, len + 1))
+extension Point {
+    func points(within distance: Int) -> [Point] {
+        var result = [Point]()
+        for x in self.x - distance ... self.x + distance {
+            for y in self.y - distance ... self.y + distance {
+                let p = Point(x, y)
+                if p.distance(to: self) <= distance && p != self {
+                    result.append(p)
                 }
             }
         }
-        fatalError()
+        return result
+    }
+}
+
+struct RaceTrack: Pathfinding {
+    let grid: [Point: Character]
+
+    func shortestPath(from start: Point, to end: Point) -> [Point] {
+        let pathfinder = AStarPathfinder(map: self)
+        return pathfinder.shortestPath(from: start, to: end)
     }
 
     func neighbors(of point: Point) -> [Point] {
-        var n = [Point]()
-        for dir in Direction.orthogonal {
-            let p = point + dir
-            if grid[p] == "." { n.append(p) }
-        }
-        return n
+        point.neighbors().filter { grid[$0] != "#" }
     }
 }
