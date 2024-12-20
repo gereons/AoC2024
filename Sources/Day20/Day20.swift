@@ -28,6 +28,18 @@ final class Day20: AOCDay {
     }
 
     func part1(minTimeSaved: Int) -> Int {
+        possibleCheats(minTimeSaved: minTimeSaved, cheatDistance: 2)
+    }
+
+    func part2() -> Int {
+        part2(minTimeSaved: 100)
+    }
+
+    func part2(minTimeSaved: Int) -> Int {
+        possibleCheats(minTimeSaved: minTimeSaved, cheatDistance: 20)
+    }
+
+    private func possibleCheats(minTimeSaved: Int, cheatDistance: Int) -> Int {
         let start = grid.first { $0.value == "S" }!.key
         let end = grid.first { $0.value == "E" }!.key
         var grid = grid
@@ -37,37 +49,22 @@ final class Day20: AOCDay {
         let raceTrack = RaceTrack(grid: grid)
         let regularPath = raceTrack.shortestPath(from: start, to: end)
         let fullPath = [start] + regularPath
-        let distances = Dictionary(uniqueKeysWithValues: fullPath.enumerated().map { ($0.element, $0.offset) })
+        let fullPathDistances = Array(fullPath.enumerated())
 
         var timesSaved = [Int: Int]()
-        for (point, distance) in distances {
-            for candidate in point.points(within: 2) {
-                guard let onPath = distances[candidate] else { continue }
-                if onPath > distance + 2 {
-                    timesSaved[onPath - distance - 2, default: 0] += 1
+        for (distance, point) in fullPathDistances {
+            // check cheating to any point further along the path that is still within `cheatDistance`
+            let candidates = fullPathDistances[distance...].filter { $0.element.distance(to: point) <= cheatDistance }
+            for candidate in candidates {
+                let d = point.distance(to: candidate.element)
+                if candidate.offset > distance + d {
+                    timesSaved[candidate.offset - distance - d, default: 0] += 1
                 }
             }
         }
-        return timesSaved.filter { $0.key >= minTimeSaved }.reduce(0) { $0 + $1.value }
-    }
-
-    func part2() -> Int {
-        0
-    }
-}
-
-extension Point {
-    func points(within distance: Int) -> [Point] {
-        var result = [Point]()
-        for x in self.x - distance ... self.x + distance {
-            for y in self.y - distance ... self.y + distance {
-                let p = Point(x, y)
-                if p.distance(to: self) <= distance && p != self {
-                    result.append(p)
-                }
-            }
-        }
-        return result
+        return timesSaved
+            .filter { $0.key >= minTimeSaved }
+            .reduce(0) { $0 + $1.value }
     }
 }
 
