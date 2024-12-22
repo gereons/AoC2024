@@ -63,7 +63,7 @@ final class Day22: AOCDay {
     private func priceChanges(initial secret: Int, n: Int) -> [PriceChange] {
         var secret = secret
         var prevDigit = secret % 10
-        var results = [(Int, Int)]()
+        var results = [PriceChange]()
         for _ in 0 ..< n {
             secret = mixPrune(secret, secret * 64)
             secret = mixPrune(secret, secret / 32)
