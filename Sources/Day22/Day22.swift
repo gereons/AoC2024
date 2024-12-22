@@ -5,11 +5,7 @@
 //
 
 import AoCTools
-
-private struct Run: Hashable {
-    let changes: [Int]
-    let price: Int
-}
+import Algorithms
 
 private typealias PriceChange = (price: Int, change: Int)
 
@@ -31,29 +27,26 @@ final class Day22: AOCDay {
     }
 
     func part2() -> Int {
-        // for each monkey: list of price changes and their resulting price
-        var monkeyRuns = [Int: [Run]]()
-
+        // for each monkey: map of price changes and their resulting price
+        // store price only the first time we see each list of changes
+        var monkeyRuns = [Int: [[Int]: Int]]()
         for (monkeyId, secret) in secrets.enumerated() {
             let changes = priceChanges(initial: secret, n: 2000)
 
-            for run in changes.runs(ofLength: 4) {
-                let r = Run(changes: [run[0].change, run[1].change, run[2].change, run[3].change], price: run[3].price)
-                monkeyRuns[monkeyId, default: []].append(r)
+            for run in changes.windows(ofCount: 4) {
+                let changes = run.map { $0.change }
+                let price = run.last!.price
+                if monkeyRuns[monkeyId]?[changes] == nil {
+                    monkeyRuns[monkeyId, default: [:]][changes] = price
+                }
             }
         }
 
-        // sum up the total price for each run of changes, but only one per monkey
+        // sum up the total price for each run of changes
         var sums = [[Int]: Int]()
-        var monkeyChangeSeen = Set<[Int]>()
-        for (monkeyId, runs) in monkeyRuns {
-            for run in runs {
-                let key = [monkeyId] + run.changes
-                if monkeyChangeSeen.contains(key) {
-                    continue
-                }
-                sums[run.changes, default: 0] += run.price
-                monkeyChangeSeen.insert(key)
+        for runs in monkeyRuns.values {
+            for (changes, price) in runs {
+                sums[changes, default: 0] += price
             }
         }
 
@@ -88,13 +81,5 @@ final class Day22: AOCDay {
 
     private func mixPrune(_ secret: Int, _ value: Int) -> Int {
         (secret ^ value) % 16777216
-    }
-}
-
-private extension Array {
-    func runs(ofLength n: Int) -> [[Element]] {
-        (0 ... (count - n)).map {
-            Array(self[$0 ..< $0 + n])
-        }
     }
 }
