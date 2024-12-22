@@ -22,7 +22,7 @@ p=9,5 v=-3,-3
 
 @Suite("Day 14 Tests")
 struct Day14Tests {
-    @MainActor @Test("Day 14 Part 1")
+    @MainActor @Test("Day 14 Part 1", .tags(.testInput))
     func testDay14_part1() {
         let day = Day14(input: testInput, width: 11, height: 7)
         #expect(day.part1() == 12)

@@ -25,7 +25,7 @@ Prize: X=18641, Y=10279
 
 @Suite("Day 13 Tests")
 struct Day13Tests {
-    @MainActor @Test("Day 13 Part 1")
+    @MainActor @Test("Day 13 Part 1", .tags(.testInput))
     func testDay13_part1() {
         let day = Day13(input: testInput)
         #expect(day.part1() == 480)
@@ -37,7 +37,7 @@ struct Day13Tests {
         #expect(day.part1() == 26810)
     }
 
-    @MainActor @Test("Day 13 Part 2")
+    @MainActor @Test("Day 13 Part 2", .tags(.testInput))
     func testDay13_part2() {
         let day = Day13(input: testInput)
         #expect(day.part2() == 875318608908)

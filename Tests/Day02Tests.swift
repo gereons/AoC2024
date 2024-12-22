@@ -16,7 +16,7 @@ fileprivate let testInput = """
 
 @Suite("Day 2 Tests")
 struct Day02Tests {
-    @MainActor @Test("Day 2 Part 1")
+    @MainActor @Test("Day 2 Part 1", .tags(.testInput))
     func testDay02_part1() {
         let day = Day02(input: testInput)
         #expect(day.part1() == 2)
@@ -28,7 +28,7 @@ struct Day02Tests {
         #expect(day.part1() == 411)
     }
 
-    @MainActor @Test("Day 2 Part 2")
+    @MainActor @Test("Day 2 Part 2", .tags(.testInput))
     func testDay02_part2() {
         let day = Day02(input: testInput)
         #expect(day.part2() == 4)

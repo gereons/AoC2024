@@ -52,7 +52,7 @@ AAAAAA
 
 @Suite("Day 12 Tests")
 struct Day12Tests {
-    @MainActor @Test("Day 12 Part 1")
+    @MainActor @Test("Day 12 Part 1", .tags(.testInput))
     func testDay12_part1() {
         var day = Day12(input: testInput)
         #expect(day.part1() == 140)
@@ -70,7 +70,7 @@ struct Day12Tests {
         #expect(day.part1() == 1375574)
     }
 
-    @MainActor @Test("Day 12 Part 2")
+    @MainActor @Test("Day 12 Part 2", .tags(.testInput))
     func testDay12_part2() {
         var day = Day12(input: testInput)
         #expect(day.part2() == 80)

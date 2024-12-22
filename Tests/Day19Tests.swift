@@ -20,7 +20,7 @@ bbrgwb
 
 @Suite("Day 19 Tests")
 struct Day19Tests {
-    @MainActor @Test("Day 19 Part 1")
+    @MainActor @Test("Day 19 Part 1", .tags(.testInput))
     func testDay19_part1() {
         let day = Day19(input: testInput)
         #expect(day.part1() == 6)
@@ -32,7 +32,7 @@ struct Day19Tests {
         #expect(day.part1() == 236)
     }
 
-    @MainActor @Test("Day 19 Part 2")
+    @MainActor @Test("Day 19 Part 2", .tags(.testInput))
     func testDay19_part2() {
         let day = Day19(input: testInput)
         #expect(day.part2() == 16)

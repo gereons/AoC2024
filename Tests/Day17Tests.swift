@@ -23,7 +23,7 @@ Program: 0,3,5,4,3,0
 
 @Suite("Day 17 Tests")
 struct Day17Tests {
-    @MainActor @Test("Day 17 Part 1")
+    @MainActor @Test("Day 17 Part 1", .tags(.testInput))
     func testDay17_part1() {
         let day = Day17(input: testInput)
         #expect(day.part1() == "4,6,3,5,6,3,5,2,1,0")
@@ -35,7 +35,7 @@ struct Day17Tests {
         #expect(day.part1() == "5,1,4,0,5,1,0,2,6")
     }
 
-    @MainActor @Test("Day 17 Part 2")
+    @MainActor @Test("Day 17 Part 2", .tags(.testInput))
     func testDay17_part2() {
         let day = Day17(input: testInput2)
         #expect(day.part2() == 117440)
