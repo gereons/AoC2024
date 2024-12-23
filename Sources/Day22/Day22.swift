@@ -29,21 +29,18 @@ final class Day22: AOCDay {
     func part2() -> Int {
         // for each monkey: map of price changes and their resulting price
         // store price only the first time we see each list of changes
-        var monkeyRuns = [Int: [[Int]: Int]]()
+        var monkeyRuns = [Int: [Int: Int]]()
         for (monkeyId, secret) in secrets.enumerated() {
             let changes = priceChanges(initial: secret, n: 2000)
 
-            for run in changes.windows(ofCount: 4) {
-                let changes = run.map { $0.change }
-                let price = run.last!.price
-                if monkeyRuns[monkeyId]?[changes] == nil {
-                    monkeyRuns[monkeyId, default: [:]][changes] = price
-                }
+            let changeSet = changes.windows(ofCount: 4).map { run in
+                (flatten(run.map { $0.change }), run.last!.price)
             }
+            monkeyRuns[monkeyId] = Dictionary(changeSet, uniquingKeysWith: { old, _ in old })
         }
 
         // sum up the total price for each run of changes
-        var sums = [[Int]: Int]()
+        var sums = [Int: Int]()
         for runs in monkeyRuns.values {
             for (changes, price) in runs {
                 sums[changes, default: 0] += price
@@ -51,6 +48,11 @@ final class Day22: AOCDay {
         }
 
         return sums.max(of: \.value)!
+    }
+
+    // flatten a set of price changes in to a single Int for faster hashing
+    private func flatten(_ values: [Int]) -> Int {
+        (values[0] + 10) << 24 + (values[1] + 10) << 16 + (values[2] + 10) << 8 + values[3]
     }
 
     private func priceChanges(initial secret: Int, n: Int) -> [PriceChange] {
