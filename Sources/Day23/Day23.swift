@@ -5,6 +5,7 @@
 //
 
 import AoCTools
+import Collections
 
 final class Day23: AOCDay {
     let title = "LAN Party"
@@ -40,7 +41,52 @@ final class Day23: AOCDay {
         return ts.count
     }
 
-    func part2() -> Int {
-        0
+    func part2() -> String {
+        var cliques = Set<Set<String>>()
+        for start in Set(connections.map { $0.first }) {
+            if cliques.contains(where: { $0.contains(start) }) {
+                continue
+            }
+            let clique = findAllConnectedTo(start)
+            cliques.insert(clique)
+        }
+        
+        return cliques
+            .sorted(by: { $0.count > $1.count })
+            .first!
+            .sorted()
+            .joined(separator: ",")
+    }
+
+    private func findAllConnectedTo(_ start: String) -> Set<String> {
+        var clique = Set([start])
+        var candidates = Deque<String>([start])
+
+        while let candidate = candidates.popFirst() {
+            // neighbors of our current candidate
+            let neighbors = connections.filter { $0.first == candidate }
+            // only look at ones that are connected to everyone in out clique so far
+            let nextCandidates = neighbors.filter { isConnected($0.second, clique) }
+            for next in nextCandidates {
+                if !clique.contains(next.second) {
+                    clique.insert(next.second)
+                    candidates.append(next.second)
+                }
+            }
+
+            // remove all entries from clique that aren't connected to everyone else any longer
+            let copy = clique
+            for c in copy {
+                if !isConnected(c, copy) {
+                    clique.remove(c)
+                }
+            }
+        }
+
+        return clique
+    }
+
+    private func isConnected(_ node: String, _ clique: Set<String>) -> Bool {
+        clique.allSatisfy { node == $0 || connections.contains(Pair(node, $0)) }
     }
 }

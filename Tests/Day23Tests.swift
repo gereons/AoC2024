@@ -57,12 +57,12 @@ struct Day23Tests {
     @MainActor @Test("Day 23 Part 2", .tags(.testInput))
     func testDay23_part2() {
         let day = Day23(input: testInput)
-        #expect(day.part2() == 0)
+        #expect(day.part2() == "co,de,ka,ta")
     }
 
     @MainActor @Test("Day 23 Part 2 Solution")
     func testDay23_part2_solution() {
         let day = Day23(input: Day23.input)
-        #expect(day.part2() == 0)
+        #expect(day.part2() == "cm,de,ez,gv,hg,iy,or,pw,qu,rs,sn,uc,wq")
     }
 }
