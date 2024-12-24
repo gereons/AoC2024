@@ -85,15 +85,9 @@ struct Day24Tests {
         #expect(day.part1() == 51715173446832)
     }
 
-    @MainActor @Test("Day 24 Part 2", .tags(.testInput))
-    func testDay24_part2() {
-        let day = Day24(input: testInput)
-        #expect(day.part2() == 0)
-    }
-
     @MainActor @Test("Day 24 Part 2 Solution")
     func testDay24_part2_solution() {
         let day = Day24(input: Day24.input)
-        #expect(day.part2() == 0)
+        #expect(day.part2() == "dpg,kmb,mmf,tvp,vdk,z10,z15,z25")
     }
 }

@@ -6,7 +6,7 @@
 
 import AoCTools
 
-struct Gate {
+private struct Gate {
     let input1: String
     let input2: String
     let op: Operation
@@ -31,7 +31,8 @@ final class Day24: AOCDay {
     let title = "Crossed Wires"
 
     let inputs: [String: Int]
-    let gates: [Gate]
+    private let gates: [String: Gate]
+    let inputBits: Int
 
     init(input: String) {
         let parts = input.lines.grouped(by: \.isEmpty)
@@ -42,16 +43,106 @@ final class Day24: AOCDay {
         }
         self.inputs = Dictionary(uniqueKeysWithValues: wires)
 
-        gates = parts[1].map { Gate(from: $0) }
+        let gates = parts[1].map { Gate(from: $0) }
+        self.gates = gates.mapped(by: \.output)
+
+        self.inputBits = inputs.count / 2
     }
 
     func part1() -> Int {
-        let outputs = gates.map { $0.output }.filter { $0.hasPrefix("z") }
+        let adder = Adder(gates: self.gates, inputBits: inputBits)
+        return adder.add(inputs: inputs)
+    }
+
+    func part2() -> String {
+        var gates = self.gates
+        var swaps = [String]()
+        for bits in 0 ..< inputBits {
+            if testBits(gates: gates, bits: bits) {
+                continue
+            }
+
+            let swapped = findSwaps(gates: &gates, bits: bits + 1)
+            swaps.append(swapped.0)
+            swaps.append(swapped.1)
+        }
+
+        return swaps
+            .sorted()
+            .joined(separator: ",")
+    }
+
+    private func findSwaps(gates: inout [String: Gate], bits: Int) -> (String, String) {
+        let keys = gates.keys.sorted()
+        for g1 in keys {
+            for g2 in keys {
+                if g2 <= g1 {
+                    continue
+                }
+
+                var tmp = gates[g1]!
+                gates[g1] = gates[g2]!
+                gates[g2] = tmp
+
+                if testBits(gates: gates, bits: bits) {
+                    return (g1, g2)
+                }
+
+                tmp = gates[g1]!
+                gates[g1] = gates[g2]!
+                gates[g2] = tmp
+            }
+        }
+        fatalError()
+    }
+
+    private func testBits(gates: [String: Gate], bits: Int) -> Bool {
+        for _ in 0...20 {
+            let x = Int.random(in: 0...pow(2, bits))
+            let y = Int.random(in: 0...pow(2, bits))
+            if !testAddition(gates: gates, x: x, y: y) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private func testAddition(gates: [String: Gate], x: Int, y: Int) -> Bool {
+        let adder = Adder(gates: gates, inputBits: inputBits)
+        let result = adder.add(x: x, y: y, expectedResult: true)
+        return x + y == result
+    }
+}
+
+private struct Adder {
+    let gates: [String: Gate]
+    let inputBits: Int
+
+    func add(x: Int, y: Int, expectedResult: Bool = false) -> Int {
+        var inputs = [String: Int]()
+        var expectedOutputs = [String: Int]()
+        for bit in 0 ... inputBits {
+            inputs["x\(String(format: "%02d", bit))"] = x >> bit & 1
+            inputs["y\(String(format: "%02d", bit))"] = y >> bit & 1
+        }
+        if expectedResult {
+            for bit in 0 ... inputBits + 1 {
+                expectedOutputs["z\(String(format: "%02d", bit))"] = (x + y) >> bit & 1
+            }
+        }
+        return add(inputs: inputs, expectedOutputs: expectedOutputs)
+    }
+
+    func add(inputs: [String: Int], expectedOutputs: [String: Int] = [:]) -> Int {
+        let outputs = gates.keys.filter { $0.hasPrefix("z") }.sorted()
 
         var results = [String: Int]()
         for output in outputs {
-            let value = findValue(output)
-            results[output] = value
+            if let value = findValue(for: output, in: gates, inputs: inputs, expectedOutputs: expectedOutputs) {
+                results[output] = value
+            } else {
+                return -1
+            }
         }
 
         let bits = results
@@ -62,40 +153,33 @@ final class Day24: AOCDay {
         return Int(bits, radix: 2)!
     }
 
-    private lazy var findValue = Memoized<String, Int> { [unowned self] output, recurse in
-        let instruction = gates.first { $0.output == output }!
+    private func findValue(for output: String, in gates: [String: Gate], inputs: [String: Int], expectedOutputs: [String: Int]) -> Int? {
+        var done = false
+        var values = inputs
+        while !done {
+            done = true
 
-        let value1 = inputs[instruction.input1] ?? recurse(instruction.input1)
-        let value2 = inputs[instruction.input2] ?? recurse(instruction.input2)
-        switch instruction.op {
-        case .and: return value1 & value2
-        case .or: return value1 | value2
-        case .xor: return value1 ^ value2
-        }
-    }
+            for out in gates.keys {
+                if values[out] != nil {
+                    continue
+                }
 
-    func part2() -> Int {
-        0
-    }
-}
-
-public final class Memoized<In: Hashable, Out> {
-    private var _compute: (In, Memoized) -> Out
-
-    public init(_ compute: @escaping (In, Memoized) -> Out) {
-        _compute = { _, _ in fatalError() }
-
-        unowned let me = self
-        var cache: [In: Out] = [:]
-        _compute = { input, _ in
-            if let answer = cache[input] {
-                return answer
+                let op = gates[out]!
+                if let i1 = values[op.input1], let i2 = values[op.input2] {
+                    let value = switch op.op {
+                        case .and: i1 & i2
+                        case .or: i1 | i2
+                        case .xor: i1 ^ i2
+                        }
+                    values[out] = value
+                    if out.prefix(1) == "z" && !expectedOutputs.isEmpty && expectedOutputs[out] != value {
+                        return nil
+                    }
+                    done = false
+                }
             }
-            let answer = compute(input, me)
-            cache[input] = answer
-            return answer
         }
-    }
 
-    public func callAsFunction(_ input: In) -> Out { _compute(input, self) }
+        return values[output]
+    }
 }
