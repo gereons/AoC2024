@@ -12,6 +12,8 @@ private struct Gate {
     let op: Operation
     let output: String
 
+    var inputs: [String] { [input1, input2] }
+
     enum Operation: String {
         case and = "AND"
         case or = "OR"
@@ -62,7 +64,14 @@ final class Day24: AOCDay {
                 continue
             }
 
-            let swapped = findSwaps(gates: &gates, bits: bits + 1)
+            // find gates that are used to get this output bit and try swapping any pair of those
+            let output = "z\(String(format: "%02d", bits + 1))"
+            var swapCandidates = gatesUsedToCalculate(output, gates: gates)
+            for z in 0 ... bits {
+                swapCandidates.insert("z\(String(format: "%02d", z))")
+            }
+            let swapped = findSwaps(gates: &gates, bits: bits + 1, swappable: swapCandidates)
+
             swaps.append(swapped.0)
             swaps.append(swapped.1)
         }
@@ -72,8 +81,8 @@ final class Day24: AOCDay {
             .joined(separator: ",")
     }
 
-    private func findSwaps(gates: inout [String: Gate], bits: Int) -> (String, String) {
-        let keys = gates.keys.sorted()
+    private func findSwaps(gates: inout [String: Gate], bits: Int, swappable: Set<String>) -> (String, String) {
+        let keys = swappable.sorted()
         for g1 in keys {
             for g2 in keys {
                 if g2 <= g1 {
@@ -109,8 +118,26 @@ final class Day24: AOCDay {
 
     private func testAddition(gates: [String: Gate], x: Int, y: Int) -> Bool {
         let adder = Adder(gates: gates, inputBits: inputBits)
-        let result = adder.add(x: x, y: y, expectedResult: true)
+        let result = adder.add(x: x, y: y, expectedResult: x + y)
         return x + y == result
+    }
+
+    private func gatesUsedToCalculate(_ output: String, gates: [String: Gate]) -> Set<String> {
+        let producers = gates.values.filter({ $0.output == output })
+        if producers.isEmpty {
+            return []
+        } else {
+            var set = Set<String>()
+            for gate in producers {
+                for input in gate.inputs {
+                    if !["x", "y"].contains(input.prefix(1)) {
+                        set.insert(input)
+                    }
+                    set.formUnion(gatesUsedToCalculate(input, gates: gates))
+                }
+            }
+            return set
+        }
     }
 }
 
@@ -118,16 +145,17 @@ private struct Adder {
     let gates: [String: Gate]
     let inputBits: Int
 
-    func add(x: Int, y: Int, expectedResult: Bool = false) -> Int {
+    func add(x: Int, y: Int, expectedResult: Int? = nil) -> Int {
         var inputs = [String: Int]()
-        var expectedOutputs = [String: Int]()
         for bit in 0 ..< inputBits {
             inputs["x\(String(format: "%02d", bit))"] = x >> bit & 1
             inputs["y\(String(format: "%02d", bit))"] = y >> bit & 1
         }
-        if expectedResult {
+
+        var expectedOutputs = [String: Int]()
+        if let expectedResult {
             for bit in 0 ..< inputBits + 1 {
-                expectedOutputs["z\(String(format: "%02d", bit))"] = (x + y) >> bit & 1
+                expectedOutputs["z\(String(format: "%02d", bit))"] = expectedResult >> bit & 1
             }
         }
         return add(inputs: inputs, expectedOutputs: expectedOutputs)
