@@ -121,12 +121,12 @@ private struct Adder {
     func add(x: Int, y: Int, expectedResult: Bool = false) -> Int {
         var inputs = [String: Int]()
         var expectedOutputs = [String: Int]()
-        for bit in 0 ... inputBits {
+        for bit in 0 ..< inputBits {
             inputs["x\(String(format: "%02d", bit))"] = x >> bit & 1
             inputs["y\(String(format: "%02d", bit))"] = y >> bit & 1
         }
         if expectedResult {
-            for bit in 0 ... inputBits + 1 {
+            for bit in 0 ..< inputBits + 1 {
                 expectedOutputs["z\(String(format: "%02d", bit))"] = (x + y) >> bit & 1
             }
         }
@@ -134,26 +134,22 @@ private struct Adder {
     }
 
     func add(inputs: [String: Int], expectedOutputs: [String: Int] = [:]) -> Int {
-        let outputs = gates.keys.filter { $0.hasPrefix("z") }.sorted()
+        if let results = findZBits(in: gates, inputs: inputs, expectedOutputs: expectedOutputs), results.count == inputBits + 1 {
+            let bits = results
+                .sorted { $0.key > $1.key }
+                .map { String($0.value) }
+                .joined()
 
-        var results = [String: Int]()
-        for output in outputs {
-            if let value = findValue(for: output, in: gates, inputs: inputs, expectedOutputs: expectedOutputs) {
-                results[output] = value
-            } else {
-                return -1
-            }
+            return Int(bits, radix: 2)!
         }
-
-        let bits = results
-            .sorted { $0.key > $1.key }
-            .map { String($0.value) }
-            .joined()
-
-        return Int(bits, radix: 2)!
+        return -1
     }
 
-    private func findValue(for output: String, in gates: [String: Gate], inputs: [String: Int], expectedOutputs: [String: Int]) -> Int? {
+    private func findZBits(
+        in gates: [String: Gate],
+        inputs: [String: Int],
+        expectedOutputs: [String: Int]
+    ) -> [String: Int]? {
         var done = false
         var values = inputs
         while !done {
@@ -180,6 +176,6 @@ private struct Adder {
             }
         }
 
-        return values[output]
+        return values.filter { $0.key.hasPrefix("z") }
     }
 }
