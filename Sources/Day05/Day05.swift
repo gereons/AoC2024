@@ -21,12 +21,12 @@ final class Day05: AOCDay {
         let groups = input.lines.grouped(by: \.isEmpty)
 
         rules = groups[0]
-            .map { $0.allInts() }
+            .map { $0.integers() }
             .map { Rule(page1: $0[0], page2: $0[1]) }
             .makeSet()
 
         updates = groups[1]
-            .map { $0.allInts() }
+            .map { $0.integers() }
     }
 
     func part1() -> Int {

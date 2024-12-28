@@ -75,10 +75,10 @@ final class Day17: AOCDay {
 
     init(input: String) {
         let lines = input.lines
-        let regA = lines[0].allInts()[0]
-        let regB = lines[1].allInts()[0]
-        let regC = lines[2].allInts()[0]
-        let program = lines[4].allInts()
+        let regA = lines[0].integers()[0]
+        let regB = lines[1].integers()[0]
+        let regC = lines[2].integers()[0]
+        let program = lines[4].integers()
 
         cpu = ChronospatialComputer(program: program, initialRegisters: [regA, regB, regC])
     }

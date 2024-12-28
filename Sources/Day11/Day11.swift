@@ -13,7 +13,7 @@ final class Day11: AOCDay {
     let stones: [Int]
 
     init(input: String) {
-        stones = input.allInts()
+        stones = input.integers()
     }
 
     func part1() -> Int {

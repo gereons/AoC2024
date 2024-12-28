@@ -5,14 +5,13 @@
 //
 
 import AoCTools
-import Foundation
 
 final class Day07: AOCDay {
     let title = "Bridge Repair"
 
     let equations: [[Int]]
     init(input: String) {
-        equations = input.lines.map { $0.allInts() }
+        equations = input.lines.map { $0.integers() }
     }
 
     func part1() -> Int {

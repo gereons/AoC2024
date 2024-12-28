@@ -13,7 +13,7 @@ final class Day18: AOCDay {
     var ram = [Point: Character]()
 
     init(input: String) {
-        bytes = input.lines.map { $0.allInts() }.map { Point($0[0], $0[1]) }
+        bytes = input.lines.map { $0.integers() }.map { Point($0[0], $0[1]) }
     }
 
     func part1() -> Int {

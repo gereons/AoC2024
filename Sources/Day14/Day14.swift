@@ -24,7 +24,7 @@ final class Day14: AOCDay {
 
     init(input: String, width: Int, height: Int) {
         robots = input.lines
-            .map { $0.allInts() }
+            .map { $0.integers() }
             .map { Robot(position: Point($0[0], $0[1]), velocity: Point($0[2], $0[3])) }
         self.height = height
         self.width = width

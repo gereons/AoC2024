@@ -115,21 +115,9 @@ final class Day21: AOCDay {
             guard let nextChar = map[startPoint + dir] else { continue }
             if nextChar != "X" && !visited.contains(nextChar) {
                 let nextSteps = generateSteps(map: map, start: nextChar, end: end, visited: visited + start)
-                results.append(contentsOf: nextSteps.map { dir.char + $0 })
+                results.append(contentsOf: nextSteps.map { dir.description + $0 })
             }
         }
         return results
-    }
-}
-
-extension Direction {
-    var char: String {
-        switch self {
-        case .n: "^"
-        case .e: ">"
-        case .w: "<"
-        case .s: "v"
-        default: fatalError()
-        }
     }
 }

@@ -14,7 +14,7 @@ final class Day01: AOCDay {
 
     init(input: String) {
         let pairs = input.lines
-            .map { $0.allInts() }
+            .map { $0.integers() }
 
         left = pairs.map { $0[0] }
         right = pairs.map { $0[1] }

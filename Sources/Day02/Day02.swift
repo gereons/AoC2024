@@ -58,7 +58,7 @@ final class Day02: AOCDay {
     private let reports: [Report]
 
     init(input: String) {
-        reports = input.lines.map { Report(data: $0.allInts()) }
+        reports = input.lines.map { Report(data: $0.integers()) }
     }
 
     func part1() -> Int {

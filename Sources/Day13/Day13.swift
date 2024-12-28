@@ -21,9 +21,9 @@ final class Day13: AOCDay {
         let groups = input.lines.grouped(by: \.isEmpty)
 
         machines = groups.map {
-            let btnA = $0[0].allInts()
-            let btnB = $0[1].allInts()
-            let prize = $0[2].allInts()
+            let btnA = $0[0].integers()
+            let btnB = $0[1].integers()
+            let prize = $0[2].integers()
             return Machine(
                 buttonA: Point(btnA[0], btnA[1]),
                 buttonB: Point(btnB[0], btnB[1]),
