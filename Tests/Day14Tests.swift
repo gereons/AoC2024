@@ -22,21 +22,21 @@ p=9,5 v=-3,-3
 
 @Suite("Day 14 Tests")
 struct Day14Tests {
-    @MainActor @Test("Day 14 Part 1", .tags(.testInput))
-    func testDay14_part1() {
+    @Test("Day 14 Part 1", .tags(.testInput))
+    func testDay14_part1() async {
         let day = Day14(input: testInput, width: 11, height: 7)
-        #expect(day.part1() == 12)
+        #expect(await day.part1() == 12)
     }
 
-    @MainActor @Test("Day 14 Part 1 Solution")
-    func testDay14_part1_solution() {
+    @Test("Day 14 Part 1 Solution")
+    func testDay14_part1_solution() async {
         let day = Day14(input: Day14.input)
-        #expect(day.part1() == 208437768)
+        #expect(await day.part1() == 208437768)
     }
 
-    @MainActor @Test("Day 14 Part 2 Solution")
-    func testDay14_part2_solution() {
+    @Test("Day 14 Part 2 Solution")
+    func testDay14_part2_solution() async {
         let day = Day14(input: Day14.input)
-        #expect(day.part2() == 7492)
+        #expect(await day.part2() == 7492)
     }
 }

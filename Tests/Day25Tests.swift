@@ -49,15 +49,15 @@ fileprivate let testInput = """
 
 @Suite("Day 25 Tests")
 struct Day25Tests {
-    @MainActor @Test("Day 25 Part 1", .tags(.testInput))
-    func testDay25_part1() {
+    @Test("Day 25 Part 1", .tags(.testInput))
+    func testDay25_part1() async {
         let day = Day25(input: testInput)
-        #expect(day.part1() == 3)
+        #expect(await day.part1() == 3)
     }
 
-    @MainActor @Test("Day 25 Part 1 Solution")
-    func testDay25_part1_solution() {
+    @Test("Day 25 Part 1 Solution")
+    func testDay25_part1_solution() async {
         let day = Day25(input: Day25.input)
-        #expect(day.part1() == 2824)
+        #expect(await day.part1() == 2824)
     }
 }

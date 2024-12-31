@@ -11,21 +11,21 @@ fileprivate let testInput = """
 
 @Suite("Day 11 Tests")
 struct Day11Tests {
-    @MainActor @Test("Day 11 Part 1", .tags(.testInput))
-    func testDay11_part1() {
+    @Test("Day 11 Part 1", .tags(.testInput))
+    func testDay11_part1() async {
         let day = Day11(input: testInput)
-        #expect(day.part1() == 55312)
+        #expect(await day.part1() == 55312)
     }
 
-    @MainActor @Test("Day 11 Part 1 Solution")
-    func testDay11_part1_solution() {
+    @Test("Day 11 Part 1 Solution")
+    func testDay11_part1_solution() async {
         let day = Day11(input: Day11.input)
-        #expect(day.part1() == 198089)
+        #expect(await day.part1() == 198089)
     }
 
-    @MainActor @Test("Day 11 Part 2 Solution")
-    func testDay11_part2_solution() {
+    @Test("Day 11 Part 2 Solution")
+    func testDay11_part2_solution() async {
         let day = Day11(input: Day11.input)
-        #expect(day.part2() == 236302670835517)
+        #expect(await day.part2() == 236302670835517)
     }
 }

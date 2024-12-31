@@ -37,33 +37,33 @@ fileprivate let testInput3 = """
 
 @Suite("Day 10 Tests")
 struct Day10Tests {
-    @MainActor @Test("Day 10 Part 1", .tags(.testInput))
-    func testDay10_part1() {
+    @Test("Day 10 Part 1", .tags(.testInput))
+    func testDay10_part1() async {
         let day = Day10(input: testInput)
-        #expect(day.part1() == 36)
+        #expect(await day.part1() == 36)
     }
 
-    @MainActor @Test("Day 10 Part 1 Solution")
-    func testDay10_part1_solution() {
+    @Test("Day 10 Part 1 Solution")
+    func testDay10_part1_solution() async {
         let day = Day10(input: Day10.input)
-        #expect(day.part1() == 501)
+        #expect(await day.part1() == 501)
     }
 
-    @MainActor @Test("Day 10 Part 2", .tags(.testInput))
-    func testDay10_part2() {
+    @Test("Day 10 Part 2", .tags(.testInput))
+    func testDay10_part2() async {
         var day = Day10(input: testInput)
-        #expect(day.part2() == 81)
+        #expect(await day.part2() == 81)
 
         day = Day10(input: testInput2)
-        #expect(day.part2() == 3)
+        #expect(await day.part2() == 3)
 
         day = Day10(input: testInput3)
-        #expect(day.part2() == 227)
+        #expect(await day.part2() == 227)
     }
 
-    @MainActor @Test("Day 10 Part 2 Solution")
-    func testDay10_part2_solution() {
+    @Test("Day 10 Part 2 Solution")
+    func testDay10_part2_solution() async {
         let day = Day10(input: Day10.input)
-        #expect(day.part2() == 1017)
+        #expect(await day.part2() == 1017)
     }
 }

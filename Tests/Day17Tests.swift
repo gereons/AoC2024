@@ -23,27 +23,27 @@ Program: 0,3,5,4,3,0
 
 @Suite("Day 17 Tests")
 struct Day17Tests {
-    @MainActor @Test("Day 17 Part 1", .tags(.testInput))
-    func testDay17_part1() {
+    @Test("Day 17 Part 1", .tags(.testInput))
+    func testDay17_part1() async {
         let day = Day17(input: testInput)
-        #expect(day.part1() == "4,6,3,5,6,3,5,2,1,0")
+        #expect(await day.part1() == "4,6,3,5,6,3,5,2,1,0")
     }
 
-    @MainActor @Test("Day 17 Part 1 Solution")
-    func testDay17_part1_solution() {
+    @Test("Day 17 Part 1 Solution")
+    func testDay17_part1_solution() async {
         let day = Day17(input: Day17.input)
-        #expect(day.part1() == "5,1,4,0,5,1,0,2,6")
+        #expect(await day.part1() == "5,1,4,0,5,1,0,2,6")
     }
 
-    @MainActor @Test("Day 17 Part 2", .tags(.testInput))
-    func testDay17_part2() {
+    @Test("Day 17 Part 2", .tags(.testInput))
+    func testDay17_part2() async {
         let day = Day17(input: testInput2)
-        #expect(day.part2() == 117440)
+        #expect(await day.part2() == 117440)
     }
 
-    @MainActor @Test("Day 17 Part 2 Solution")
-    func testDay17_part2_solution() {
+    @Test("Day 17 Part 2 Solution")
+    func testDay17_part2_solution() async {
         let day = Day17(input: Day17.input)
-        #expect(day.part2() == 202322936867370)
+        #expect(await day.part2() == 202322936867370)
     }
 }

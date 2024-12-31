@@ -11,7 +11,7 @@ enum AdventOfCode {
     // assign to eg `.day(1)`, leave as nil to run the puzzle for the current calendar day
     static var defaultDay: Day? // = .day(1)
 
-    static func main() {
+    static func main() async {
         var day = defaultDay ?? today
 
         if CommandLine.argc > 1 {
@@ -23,7 +23,7 @@ enum AdventOfCode {
             }
         }
 
-        run(day)
+        await run(day)
         Timer.showTotal()
     }
 
@@ -36,15 +36,22 @@ enum AdventOfCode {
         return .all
     }
 
-    private static func run(_ day: Day) {
+    private static func run(_ day: Day) async {
         switch day {
         case .all:
-            days.forEach { day in
-                day.init(input: day.input).run()
+            await withTaskGroup(of: Void.self) { group in
+                for day in days {
+                    group.addTask {
+                        await day.init(input: day.input).run()
+                    }
+                }
+
+                for await _ in group {}
             }
+
         case .day(let day):
             let day = days[day - 1]
-            day.init(input: day.input).run()
+            await day.init(input: day.input).run()
         }
     }
 
@@ -53,7 +60,7 @@ enum AdventOfCode {
         case day(Int)
     }
 
-    private static let days: [Runnable.Type] = [
+    private static let days: [any AdventOfCodeDay.Type] = [
         Day01.self, Day02.self, Day03.self, Day04.self, Day05.self,
         Day06.self, Day07.self, Day08.self, Day09.self, Day10.self,
         Day11.self, Day12.self, Day13.self, Day14.self, Day15.self,

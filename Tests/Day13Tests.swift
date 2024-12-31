@@ -25,27 +25,27 @@ Prize: X=18641, Y=10279
 
 @Suite("Day 13 Tests")
 struct Day13Tests {
-    @MainActor @Test("Day 13 Part 1", .tags(.testInput))
-    func testDay13_part1() {
+    @Test("Day 13 Part 1", .tags(.testInput))
+    func testDay13_part1() async {
         let day = Day13(input: testInput)
-        #expect(day.part1() == 480)
+        #expect(await day.part1() == 480)
     }
 
-    @MainActor @Test("Day 13 Part 1 Solution")
-    func testDay13_part1_solution() {
+    @Test("Day 13 Part 1 Solution")
+    func testDay13_part1_solution() async {
         let day = Day13(input: Day13.input)
-        #expect(day.part1() == 26810)
+        #expect(await day.part1() == 26810)
     }
 
-    @MainActor @Test("Day 13 Part 2", .tags(.testInput))
-    func testDay13_part2() {
+    @Test("Day 13 Part 2", .tags(.testInput))
+    func testDay13_part2() async {
         let day = Day13(input: testInput)
-        #expect(day.part2() == 875318608908)
+        #expect(await day.part2() == 875318608908)
     }
 
-    @MainActor @Test("Day 13 Part 2 Solution")
-    func testDay13_part2_solution() {
+    @Test("Day 13 Part 2 Solution")
+    func testDay13_part2_solution() async {
         let day = Day13(input: Day13.input)
-        #expect(day.part2() == 108713182988244)
+        #expect(await day.part2() == 108713182988244)
     }
 }

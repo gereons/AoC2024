@@ -52,45 +52,45 @@ AAAAAA
 
 @Suite("Day 12 Tests")
 struct Day12Tests {
-    @MainActor @Test("Day 12 Part 1", .tags(.testInput))
-    func testDay12_part1() {
+    @Test("Day 12 Part 1", .tags(.testInput))
+    func testDay12_part1() async {
         var day = Day12(input: testInput)
-        #expect(day.part1() == 140)
+        #expect(await day.part1() == 140)
 
         day = Day12(input: testInput2)
-        #expect(day.part1() == 772)
+        #expect(await day.part1() == 772)
 
         day = Day12(input: testInput3)
-        #expect(day.part1() == 1930)
+        #expect(await day.part1() == 1930)
     }
 
-    @MainActor @Test("Day 12 Part 1 Solution")
-    func testDay12_part1_solution() {
+    @Test("Day 12 Part 1 Solution")
+    func testDay12_part1_solution() async {
         let day = Day12(input: Day12.input)
-        #expect(day.part1() == 1375574)
+        #expect(await day.part1() == 1375574)
     }
 
-    @MainActor @Test("Day 12 Part 2", .tags(.testInput))
-    func testDay12_part2() {
+    @Test("Day 12 Part 2", .tags(.testInput))
+    func testDay12_part2() async {
         var day = Day12(input: testInput)
-        #expect(day.part2() == 80)
+        #expect(await day.part2() == 80)
 
         day = Day12(input: testInput2)
-        #expect(day.part2() == 436)
+        #expect(await day.part2() == 436)
 
         day = Day12(input: testInput3)
-        #expect(day.part2() == 1206)
+        #expect(await day.part2() == 1206)
 
         day = Day12(input: testInput4)
-        #expect(day.part2() == 236)
+        #expect(await day.part2() == 236)
 
         day = Day12(input: testInput5)
-        #expect(day.part2() == 368)
+        #expect(await day.part2() == 368)
     }
 
-    @MainActor @Test("Day 12 Part 2 Solution")
-    func testDay12_part2_solution() {
+    @Test("Day 12 Part 2 Solution")
+    func testDay12_part2_solution() async {
         let day = Day12(input: Day12.input)
-        #expect(day.part2() == 830566)
+        #expect(await day.part2() == 830566)
     }
 }

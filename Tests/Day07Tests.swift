@@ -19,27 +19,27 @@ fileprivate let testInput = """
 
 @Suite("Day 7 Tests")
 struct Day07Tests {
-    @MainActor @Test("Day 7 Part 1", .tags(.testInput))
-    func testDay07_part1() {
+    @Test("Day 7 Part 1", .tags(.testInput))
+    func testDay07_part1() async {
         let day = Day07(input: testInput)
-        #expect(day.part1() == 3749)
+        #expect(await day.part1() == 3749)
     }
 
-    @MainActor @Test("Day 7 Part 1 Solution")
-    func testDay07_part1_solution() {
+    @Test("Day 7 Part 1 Solution")
+    func testDay07_part1_solution() async {
         let day = Day07(input: Day07.input)
-        #expect(day.part1() == 20281182715321)
+        #expect(await day.part1() == 20281182715321)
     }
 
-    @MainActor @Test("Day 7 Part 2", .tags(.testInput))
-    func testDay07_part2() {
+    @Test("Day 7 Part 2", .tags(.testInput))
+    func testDay07_part2() async {
         let day = Day07(input: testInput)
-        #expect(day.part2() == 11387)
+        #expect(await day.part2() == 11387)
     }
 
-    @MainActor @Test("Day 7 Part 2 Solution")
-    func testDay07_part2_solution() {
+    @Test("Day 7 Part 2 Solution")
+    func testDay07_part2_solution() async {
         let day = Day07(input: Day07.input)
-        #expect(day.part2() == 159490400628354)
+        #expect(await day.part2() == 159490400628354)
     }
 }

@@ -42,27 +42,27 @@ td-yn
 
 @Suite("Day 23 Tests")
 struct Day23Tests {
-    @MainActor @Test("Day 23 Part 1", .tags(.testInput))
-    func testDay23_part1() {
+    @Test("Day 23 Part 1", .tags(.testInput))
+    func testDay23_part1() async {
         let day = Day23(input: testInput)
-        #expect(day.part1() == 7)
+        #expect(await day.part1() == 7)
     }
 
-    @MainActor @Test("Day 23 Part 1 Solution")
-    func testDay23_part1_solution() {
+    @Test("Day 23 Part 1 Solution")
+    func testDay23_part1_solution() async {
         let day = Day23(input: Day23.input)
-        #expect(day.part1() == 1173)
+        #expect(await day.part1() == 1173)
     }
 
-    @MainActor @Test("Day 23 Part 2", .tags(.testInput))
-    func testDay23_part2() {
+    @Test("Day 23 Part 2", .tags(.testInput))
+    func testDay23_part2() async {
         let day = Day23(input: testInput)
-        #expect(day.part2() == "co,de,ka,ta")
+        #expect(await day.part2() == "co,de,ka,ta")
     }
 
-    @MainActor @Test("Day 23 Part 2 Solution")
-    func testDay23_part2_solution() {
+    @Test("Day 23 Part 2 Solution")
+    func testDay23_part2_solution() async {
         let day = Day23(input: Day23.input)
-        #expect(day.part2() == "cm,de,ez,gv,hg,iy,or,pw,qu,rs,sn,uc,wq")
+        #expect(await day.part2() == "cm,de,ez,gv,hg,iy,or,pw,qu,rs,sn,uc,wq")
     }
 }
