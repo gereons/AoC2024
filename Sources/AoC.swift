@@ -19,7 +19,9 @@ enum AdventOfCode {
             if let d = Int(arg), 1...25 ~= d {
                 day = .day(d)
             } else if arg == "all" {
-                day = .all
+                day = .allSequential
+            } else if arg == "all-parallel" {
+                day = .allParallel
             }
         }
 
@@ -33,22 +35,24 @@ enum AdventOfCode {
         if components.month == 12 && 1...25 ~= day {
             return .day(day)
         }
-        return .all
+        return .allSequential
     }
 
     private static func run(_ day: Day) async {
         switch day {
-        case .all:
+        case .allSequential:
+            for day in days {
+                await day.init(input: day.input).run()
+            }
+        case .allParallel:
             await withTaskGroup(of: Void.self) { group in
                 for day in days {
                     group.addTask {
                         await day.init(input: day.input).run()
                     }
                 }
-
                 for await _ in group {}
             }
-
         case .day(let day):
             let day = days[day - 1]
             await day.init(input: day.input).run()
@@ -56,7 +60,8 @@ enum AdventOfCode {
     }
 
     enum Day {
-        case all
+        case allSequential
+        case allParallel
         case day(Int)
     }
 
