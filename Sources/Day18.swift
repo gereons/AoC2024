@@ -6,7 +6,7 @@
 
 import AoCTools
 
-final class Day18: AdventOfCodeDay {
+final class Day18: AdventOfCodeDay, @unchecked Sendable {
     let title = "RAM Run"
 
     let bytes: [Point]

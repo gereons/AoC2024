@@ -6,7 +6,9 @@
 
 import AoCTools
 
-final class Day21: AdventOfCodeDay {
+extension Pair: @retroactive @unchecked Sendable where T: Sendable, U: Sendable {}
+
+final class Day21: AdventOfCodeDay, @unchecked Sendable {
     let title = "Keypad Conundrum"
 
     let codes: [String]

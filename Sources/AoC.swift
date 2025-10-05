@@ -9,7 +9,7 @@ import Foundation
 @MainActor
 enum AdventOfCode {
     // assign to eg `.day(1)`, leave as nil to run the puzzle for the current calendar day
-    static var defaultDay: Day? // = .day(1)
+    static var defaultDay: Day? = .day(17)
 
     static func main() async {
         var day = defaultDay ?? today

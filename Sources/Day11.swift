@@ -7,7 +7,7 @@
 import AoCTools
 import Foundation
 
-final class Day11: AdventOfCodeDay {
+final class Day11: AdventOfCodeDay, @unchecked Sendable {
     let title = "Plutonian Pebbles"
 
     let stones: [Int]

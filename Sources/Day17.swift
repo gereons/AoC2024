@@ -8,7 +8,7 @@ import AoCTools
 import Foundation
 import Collections
 
-private final class ChronospatialComputer {
+private final class ChronospatialComputer: Sendable {
     let program: [Int]
     let initialRegisters: [Int]
 

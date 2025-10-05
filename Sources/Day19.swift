@@ -6,7 +6,7 @@
 
 import AoCTools
 
-final class Day19: AdventOfCodeDay {
+final class Day19: AdventOfCodeDay, @unchecked Sendable {
     let title = "Linen Layout"
 
     let colors: [String]

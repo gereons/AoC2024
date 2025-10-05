@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -10,7 +10,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/lukepistrol/SwiftLintPlugin", from: "0.55.1"),
-        .package(url: "https://github.com/gereons/AoCTools", from: "0.1.6")
+        .package(url: "https://github.com/gereons/AoCTools", from: "0.1.9")
 //        .package(path: "../AoCTools")
     ],
     targets: [
